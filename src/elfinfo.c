@@ -83,6 +83,7 @@ static inline void program_info(Elf64_Ehdr* eh) {
   printf("ELFINFO: Program header entries: %d\n", eh->e_phnum);
   printf("ELFINFO: Section header offset => 0x%X\n", eh->e_shoff);
   printf("ELFINFO: Program header table offset => 0x%X\n", eh->e_phoff);
+  printf("ELFINFO: Entry point => 0x%X\n", eh->e_entry);
 }
 
 
