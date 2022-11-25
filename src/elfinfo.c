@@ -4,6 +4,28 @@
 #include <elf.h>
 
 
+static inline Elf64_Shdr* shdr(Elf64_Ehdr* eh) {
+  return (Elf64_Shdr*)((uint64_t)eh + eh->e_shoff);
+}
+
+static inline Elf64_Shdr* section(Elf64_Ehdr* eh, unsigned int idx) {
+  return &shdr(eh)[idx];
+}
+
+
+static inline char* str_table(Elf64_Ehdr* eh) {
+  if (eh->e_shstrndx == SHN_UNDEF) return NULL;
+  return (char*)eh + section(eh, eh->e_shstrndx)->sh_offset;
+}
+
+
+static inline char* section_name(Elf64_Ehdr* eh, unsigned int idx) {
+  char* strtab = str_table(eh);
+  if (strtab == NULL) return NULL;
+  return strtab + idx;
+}
+
+
 static void machine_type(Elf64_Ehdr* eh) {
   switch (eh->e_machine) {
     case EM_386:
@@ -40,7 +62,7 @@ static void read_phdrs(Elf64_Ehdr* eh) {
 
   const char* ptr = (const char*)eh + eh->e_phoff;
 
-  for (uint64_t i = 0; i < phdrs_size; ++i) {
+  for (uint64_t i = 1; i < phdrs_size; ++i) {
     ((char*)phdrs)[i] = ptr[i];
   }
 
@@ -53,6 +75,14 @@ static void read_phdrs(Elf64_Ehdr* eh) {
   }
 
   free(phdrs);
+}
+
+
+static void read_sections(Elf64_Ehdr* eh) {
+  for (size_t i = 1; i < eh->e_shnum; ++i) {
+    Elf64_Shdr* shdr = section(eh, i);
+    printf("Found section '%s' @0x%X\n", section_name(eh, shdr->sh_name), shdr->sh_addr);
+  }
 }
 
 
@@ -73,6 +103,7 @@ static void read_elf(const char* const ORIG_BUF_PTR) {
   machine_type(eh);
   program_info(eh);
   read_phdrs(eh);
+  read_sections(eh);
 }
 
 
