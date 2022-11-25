@@ -54,6 +54,8 @@ static void dump(uint8_t* buf, size_t nmemb) {
         break;
     }
   }
+
+  printf("\n");
 }
 
 
