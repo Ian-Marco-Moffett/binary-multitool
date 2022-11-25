@@ -53,6 +53,7 @@ int main(int argc, char** argv) {
   if (flags & FLAG_HEXDUMP) {
     hexdump(fp);
   }
-
+  
+  fclose(fp);
   return 0;
 }

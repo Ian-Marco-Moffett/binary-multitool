@@ -32,6 +32,7 @@ static void dump(uint8_t* buf, size_t nmemb) {
       case '<':
       case '+':
       case '-':
+      case '@':
         cbuf[i] = buf[i];
         break;
       default:
@@ -56,6 +57,7 @@ static void dump(uint8_t* buf, size_t nmemb) {
   }
 
   printf("\n");
+  free(cbuf);
 }
 
 
