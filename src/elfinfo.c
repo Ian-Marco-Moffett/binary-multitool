@@ -26,6 +26,36 @@ static inline char* section_name(Elf64_Ehdr* eh, unsigned int idx) {
 }
 
 
+static char* section_type(uint32_t sh_type) {
+  switch (sh_type) {
+    case SHT_NULL:
+      return "inactive";
+    case SHT_PROGBITS:
+      return "progbits";
+    case SHT_SYMTAB:
+      return "symtab";
+    case SHT_STRTAB:
+      return "strtab";
+    case SHT_RELA:
+      return "relocation(rela)";
+    case SHT_REL:
+      return "relocation(rel)";
+    case SHT_NOTE:
+      return "note";
+    case SHT_DYNAMIC:
+      return "dynamic_linking_info";
+    case SHT_HASH:
+      return "hash_table";
+    case SHT_NOBITS:
+      return "nobits";
+    case SHT_DYNSYM:
+      return "dynsym";
+  }
+
+  return "unknown";
+}
+
+
 static void machine_type(Elf64_Ehdr* eh) {
   switch (eh->e_machine) {
     case EM_386:
@@ -81,7 +111,7 @@ static void read_phdrs(Elf64_Ehdr* eh) {
 static void read_sections(Elf64_Ehdr* eh) {
   for (size_t i = 1; i < eh->e_shnum; ++i) {
     Elf64_Shdr* shdr = section(eh, i);
-    printf("Found section '%s' @0x%X\n", section_name(eh, shdr->sh_name), shdr->sh_addr);
+    printf("Found section '%s' @0x%X with type %s\n", section_name(eh, shdr->sh_name), shdr->sh_addr, section_type(shdr->sh_type));
   }
 }
 
