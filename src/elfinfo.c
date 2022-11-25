@@ -112,7 +112,7 @@ static void read_phdrs(Elf64_Ehdr* eh) {
 static void read_sections(Elf64_Ehdr* eh) {
   for (size_t i = 1; i < eh->e_shnum; ++i) {
     Elf64_Shdr* shdr = section(eh, i);
-    printf("Found section '%s' @0x%X with type %s\n", section_name(eh, shdr->sh_name), shdr->sh_addr, section_type(shdr->sh_type));
+    printf("ELFINFO: Found section '%s' @0x%X with type %s\n", section_name(eh, shdr->sh_name), shdr->sh_addr, section_type(shdr->sh_type));
   }
 }
 
